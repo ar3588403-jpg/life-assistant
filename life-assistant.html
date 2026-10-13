@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مساعد الحياة</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F6F8;--card:#FFFFFF;--ink:#12263A;--mute:#5B6B7B;--line:#D9E2E8;--accent:#0A7A70;--accent-ink:#FFFFFF;--warn:#C97B00;--bad:#C93B3B;--ok:#2E7D5B;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1B27;--card:#172636;--ink:#E8EEF3;--mute:#9DB0C0;--line:#274157;--accent:#2BBFAE;--accent-ink:#06211E;--warn:#F0B040;--bad:#F27A7A;--ok:#5CC596}}
+:root[data-theme="dark"]{--bg:#0F1B27;--card:#172636;--ink:#E8EEF3;--mute:#9DB0C0;--line:#274157;--accent:#2BBFAE;--accent-ink:#06211E;--warn:#F0B040;--bad:#F27A7A;--ok:#5CC596}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;line-height:1.7}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.logo{font-weight:700;font-size:18px}
+.next{background:var(--accent);color:var(--accent-ink);border-radius:24px;padding:28px 24px;margin-bottom:24px}
+.next p{margin:0;font-size:15px}
+.next .days{font-size:64px;font-weight:700;line-height:1.1;margin:4px 0}
+.next .what{font-size:18px;font-weight:500}
+h1{font-size:26px;line-height:1.4;margin:0 0 6px}
+.sub{color:var(--mute);margin:0 0 22px}
+.stats{display:flex;gap:10px;margin-bottom:22px}
+.stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.stat b{display:block;font-size:22px}
+.stat span{font-size:13px;color:var(--mute)}
+.bar{display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+ul{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:10px}
+li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+li.done{opacity:.55}
+li.done .t{text-decoration:line-through}
+.badge{flex:none;min-width:62px;text-align:center;border-radius:10px;padding:6px 4px;font-weight:700;font-size:13px;border:1.5px solid currentColor}
+.late{color:var(--bad)}.soon{color:var(--warn)}.fine{color:var(--ok)}
+.info{flex:1;min-width:120px}
+.t{font-weight:500}
+.m{font-size:13px;color:var(--mute)}
+.act{display:flex;gap:6px}
+.ic{text-decoration:none;display:inline-block;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:13px;padding:6px 10px;border-radius:8px;cursor:pointer}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:22px;text-align:center;color:var(--mute)}
+form{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:12px}
+h2{font-size:18px;margin:0 0 2px}
+label{font-size:14px;color:var(--mute);display:grid;gap:4px}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.go{background:var(--accent);color:var(--accent-ink);border:0;font:inherit;font-weight:700;padding:12px;border-radius:12px;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.note{font-size:13px;color:var(--mute);margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">مساعد الحياة</div><span class="m">نموذج أولي</span></header>
+
+<section class="next" aria-live="polite">
+<p>أقرب موعد عليك</p>
+<div class="days" id="nd">–</div>
+<div class="what" id="nw">لا توجد مواعيد</div>
+</section>
+
+<h1>لا تنسَ أي فاتورة أو تجديد بعد اليوم</h1>
+<p class="sub">سجّل التزاماتك هنا مرة واحدة، وسنذكّرك قبل موعدها.</p>
+
+<div class="stats">
+<div class="stat"><b id="s1">0</b><span>متأخر</span></div>
+<div class="stat"><b id="s2">0</b><span>خلال 14 يومًا</span></div>
+<div class="stat"><b id="s3">0</b><span>اشتراكات شهرية</span></div>
+</div>
+
+<div class="bar" id="bar"></div>
+<ul id="list"></ul>
+
+<form id="f">
+<h2>أضف التزامًا</h2>
+<label>الاسم<input id="n" required placeholder="مثال: فاتورة الكهرباء"></label>
+<div class="row">
+<label>الفئة<select id="c"><option>فاتورة</option><option>تجديد أوراق</option><option>اشتراك</option><option>موعد</option></select></label>
+<label>التاريخ<input id="d" type="date" required></label>
+</div>
+<label>المبلغ (اختياري)<input id="a" type="number" min="0" step="any" placeholder="0"></label>
+<button class="go" type="submit">أضف الالتزام</button>
+</form>
+<p class="note">هذا نموذج أولي: البيانات تُحفظ في متصفحك فقط. قراءة الصور والتنبيهات التلقائية تُضاف في الخطوة التالية. زر «ذكّرني» يفتح واتساب برسالة جاهزة.</p>
+</div>
+
+<script>
+var KEY="life-assistant-v1",items=[],filter="الكل",CATS=["الكل","فاتورة","تجديد أوراق","اشتراك","موعد"];
+function fmt(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}function iso(n){var d=new Date();d.setDate(d.getDate()+n);return fmt(d)}
+function load(){try{var r=localStorage.getItem(KEY);if(r){items=JSON.parse(r);return}}catch(e){}
+items=[{id:1,n:"فاتورة الكهرباء",c:"فاتورة",d:iso(3),a:60,done:false},{id:2,n:"تجديد الهوية",c:"تجديد أوراق",d:iso(40),a:0,done:false},{id:3,n:"اشتراك الإنترنت",c:"اشتراك",d:iso(9),a:25,done:false},{id:4,n:"تأمين السيارة",c:"تجديد أوراق",d:iso(-2),a:300,done:false}]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
+function days(s){var a=new Date(s+"T00:00:00"),b=new Date();b.setHours(0,0,0,0);return Math.round((a-b)/864e5)}
+function label(n){if(n<0)return"متأخر "+(-n)+" يوم";if(n===0)return"اليوم";if(n===1)return"غدًا";return"بعد "+n+" يوم"}
+function cls(n){return n<0?"late":n<=7?"soon":"fine"}
+function render(){
+var open=items.filter(function(x){return!x.done}).sort(function(a,b){return a.d<b.d?-1:1});
+var nx=open[0];
+document.getElementById("nd").textContent=nx?(days(nx.d)<0?"متأخر":days(nx.d)===0?"اليوم":days(nx.d)):"–";
+document.getElementById("nw").textContent=nx?nx.n:"لا توجد مواعيد، أضف أول التزام";
+document.getElementById("s1").textContent=open.filter(function(x){return days(x.d)<0}).length;
+document.getElementById("s2").textContent=open.filter(function(x){var n=days(x.d);return n>=0&&n<=14}).length;
+document.getElementById("s3").textContent=items.filter(function(x){return x.c==="اشتراك"}).reduce(function(s,x){return s+(+x.a||0)},0);
+var bar=document.getElementById("bar");bar.innerHTML="";
+CATS.forEach(function(c){var b=document.createElement("button");b.className="chip";b.type="button";b.textContent=c;b.setAttribute("aria-pressed",c===filter);b.onclick=function(){filter=c;render()};bar.appendChild(b)});
+var ul=document.getElementById("list");ul.innerHTML="";
+var shown=items.filter(function(x){return filter==="الكل"||x.c===filter}).sort(function(a,b){return(a.done-b.done)||(a.d<b.d?-1:1)});
+if(!shown.length){ul.innerHTML='<div class="empty">لا شيء هنا بعد. أضف التزامك الأول من النموذج أدناه.</div>'}
+shown.forEach(function(x){var n=days(x.d),li=document.createElement("li");if(x.done)li.className="done";
+var b=document.createElement("div");b.className="badge "+(x.done?"fine":cls(n));b.textContent=x.done?"تم":label(n);
+var i=document.createElement("div");i.className="info";
+var t=document.createElement("div");t.className="t";t.textContent=x.n;
+var m=document.createElement("div");m.className="m";m.textContent=x.c+(x.a?" • "+x.a:"");
+i.appendChild(t);i.appendChild(m);
+var a=document.createElement("div");a.className="act";
+var d1=document.createElement("button");d1.className="ic";d1.type="button";var sub=x.c==="اشتراك";d1.textContent=x.done?"إعادة":(sub?"جدّد":"تم");d1.onclick=function(){if(sub&&!x.done){var dt=new Date(x.d+"T00:00:00");dt.setMonth(dt.getMonth()+1);x.d=fmt(dt)}else{x.done=!x.done}save();render()};var w=document.createElement("a");w.className="ic";w.textContent="ذكّرني";w.target="_blank";w.rel="noopener";w.href="https://wa.me/?text="+encodeURIComponent("تذكير: "+x.n+" — "+label(n)+" ("+x.d+")");
+var d2=document.createElement("button");d2.className="ic";d2.type="button";d2.textContent="حذف";d2.onclick=function(){items=items.filter(function(y){return y.id!==x.id});save();render()};
+a.appendChild(d1);if(!x.done)a.appendChild(w);a.appendChild(d2);li.appendChild(b);li.appendChild(i);li.appendChild(a);ul.appendChild(li)})}
+document.getElementById("f").onsubmit=function(e){e.preventDefault();
+items.push({id:Date.now(),n:document.getElementById("n").value.trim(),c:document.getElementById("c").value,d:document.getElementById("d").value,a:document.getElementById("a").value,done:false});
+save();this.reset();render()};
+load();render();
+</script>
+</body>
+</html>
